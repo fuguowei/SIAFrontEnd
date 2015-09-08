@@ -1,0 +1,36 @@
+{
+  "name": "OpenshipOrder",
+  "type": "entity",
+  "children": [
+    {"name": "Shipper", "type": "entity",
+      "children": [
+        {"name": "accountNumber", "type": "attribute"},
+        {"name": "contact", "type": "attribute"},
+        {"name": "address", "type": "attribute"}
+      ]
+    },
+    {"name": "index", "type": "attribute"},
+    {"name": "shitTimeStamp", "type": "attribute"},
+    {"name": "dropoffType", "type": "attribute"},
+    {"name": "shipper", "type": "attribute"},
+    {"name": "receiver", "type": "attribute"},
+    {"name": "Customs", "type": "entity",
+      "children": [
+        {"name": "customsID", "type": "attribute"},
+        {"name": "brokers", "type": "attribute"},
+        {"name": "customsOptions", "type": "attribute"},
+        {"name": "customsValue", "type": "attribute"}
+      ]
+    },
+    {"name": "PackageLineItem", "type": "entity",
+      "children": [
+        {"name": "trackingId", "type": "attribute"},
+        {"name": "sequenceNumber", "type": "attribute"},
+        {"name": "groupNumber", "type": "attribute"},
+        {"name": "groupPackageCount", "type": "attribute"}
+      ]
+    }
+
+  ]
+}
+
