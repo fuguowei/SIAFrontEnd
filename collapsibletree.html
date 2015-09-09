@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    .node {
+        cursor: pointer;
+    }
+
+    .node circle {
+        stroke-width: 3px;
+        fill: steelblue;
+    }
+
+    .node text {
+        font: 10px sans-serif;
+        pointer-events: none;
+    }
+
+    path.link {
+        font:10px sans-serif;
+        stroke: #ddd;
+        fill: none;
+        stroke-width: 1.5px;
+    }
+
+    /*** Debugging Styles ***/
+    .test { border: 2px solid steelblue; }
+    .test1 { border: 2px solid mediumaquamarine; }
+</style>
+<body>
+
+<script src="d3/d3.js"></script>
+
+<script>
+
+    /* Set up */
+    var margin = {top: 30, right: 20, bottom: 30, left: 20};
+    var width = 960 - margin.left - margin.right;
+    var height = 500 - margin.top - margin.bottom;
+
+    var i = 0;
+    var duration = 1000;
+    var root;
+
+    // set up SVG
+    var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left * 2 + "," + margin.right + ")");
+
+    //    Set up tree
+    var tree = d3.layout.tree()
+            .size([height, width]);
+
+    // Set up Diagonal line
+    var diagonal = d3.svg.diagonal()
+            .projection(function (d) { return [d.y, d.x]; });
+
+
+
+    /* Data import */
+    d3.json("data/example.json", function(data) {
+
+        // set the root of tree to equal to the data
+        root = data;
+        // set coordinates of root node
+        root.x0 = height/2;
+        root.y0 = 0;
+        console.log(root);
+        SetupTree(data);
+    });
+
+
+    /***
+     * SetupTree Function
+     *
+     ***/
+    function SetupTree(data) {
+        var nodes = tree.nodes(data);
+        var links = tree.links(nodes);
+
+        // 0. Specify the spacing between nodes in the x plane
+        nodes.forEach(function(d) { d.y = d.depth * 100; });
+
+        // 1. Enter the data to g elements with the class node, position using transform attr
+        var node = svg.selectAll(".node")
+                .data(nodes, function(d) {
+                    return d.id || (d.id = ++i);
+                })
+                .enter()
+                .append("g")
+                .attr("class","node")
+                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+                .on("click", click);
+
+        // 2. append circle and text to the nodes
+        node.append("circle")
+                .attr("r", 4.5);
+        node.append("text")
+                .text(function(d) { return d.name; });
+
+        // 3. Enter the path data and append the diagonal paths
+        svg.selectAll(".links")
+                .data(links, function(d) {return d.target.id; })
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("d", diagonal);
+
+        // 4. Set x0 and y0 as their current position for each node, to be used later
+        nodes.forEach(function(d) {
+            d.x0 = d.x;
+            d.y0 = d.y;
+        })
+
+        console.log(node);
+    };
+
+    /***
+     * Click Function
+     * Stores children variable in a temporary variable
+     * Or, Moves hidden children to the original children variable
+     ****/
+    function click(d) {
+        // 1. If children exist, hide them in temp variable, make original variable null
+        if (d.children) {
+            d._children = d.children;
+            d.children = null;
+        }
+        // 2. Else reveal children by moving them from temp variable into original variable
+        else {
+            d.children = d._children;
+            d._children = null;
+        }
+        update(d);
+    }
+
+    /***
+     * Update function
+     * Source is the node that is clicked
+     * Handles enter, updating and exiting data points
+     * ***/
+    function update(source) {
+
+        // 0. Recompute tree nodes and links
+        var nodes = tree.nodes(root);
+        var links = tree.links(nodes);
+        nodes.forEach(function (d) {
+            d.y = d.depth * 100;
+        });
+
+        var node = svg.selectAll("g.node")
+                .data(nodes, function (d) {
+                    return d.id || (d.id = ++i);
+                });
+
+        console.log(node);
+
+        // 1. Enter new nodes at their parents position
+        var newNodes = node.enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", function (d) {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";
+                })
+                .on("click", click);
+
+        newNodes.append("circle")
+                .attr("r", 1e-6)
+        newNodes.append("text")
+                .text(function (d) {
+                    return d.name;
+                })
+                .style("fill-opacity", 1e-6);
+
+        // 2. Transition new nodes to their actual position
+        var nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function (d) {
+                    return "translate(" + d.y + "," + d.x + ")";
+                });
+        nodeUpdate.select("circle")
+                .attr("r", 4.5);
+        nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+
+        // 3. Transition exiting nodes to parent's new position
+        var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function (d) {
+                    return "translate(" + source.y + "," + source.x + ")";
+                })
+                .remove();
+
+        nodeExit.select("circle")
+                .attr("r", 1e-6);
+
+        nodeExit.select("text")
+                .style("fill-opacity", 1e-6);
+
+        // 4. Enter Links
+        var link = svg.selectAll("path.link")
+                .data(links, function (d) {
+                    return d.target.id;
+                });
+
+        link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", function (d) {
+                    var o = {x: source.x0, y: source.y0};
+                    return diagonal({source: o, target: o})
+                });
+
+        link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+
+        link.exit().transition()
+                .duration(duration)
+                .attr("d", function (d) {
+                    var o = {x: source.x, y: source.y};
+                    return diagonal({source: o, target: o});
+                })
+                .remove();
+
+        nodes.forEach(function (d) {
+            d.x0 = d.x;
+            d.y0 = d.y;
+        });
+    };
+
+
+</script>
+</body>
