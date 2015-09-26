@@ -60,7 +60,7 @@
             .projection(function (d) { return [d.y, d.x]; });
 
     /* Data import */
-    d3.json("data/children.json", function(data) {
+    d3.json("data/flare.json", function(data) {
 
         // set the root of tree to equal to the data
         root = data;
@@ -217,7 +217,29 @@
                 });
 
         // 8. Update Links
-        
+        var link = svg.selectAll("path.link")
+                .data(links, function (d) {
+                    return d.target.id;
+                });
+
+        link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", function (d) {
+                    var o = {x: source.x0, y: source.y0};
+                    return diagonal({source: o, target: o})
+                });
+
+        link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+
+        link.exit().transition()
+                .duration(duration)
+                .attr("d", function (d) {
+                    var o = {x: source.x, y: source.y};
+                    return diagonal({source: o, target: o});
+                })
+                .remove();
 
         nodes.forEach(function(d) {
             d.x0 = d.x;
