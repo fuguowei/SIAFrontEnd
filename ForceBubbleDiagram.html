@@ -19,17 +19,25 @@
         pointer-events: none;
     }
 
+
     /*** Debugging Styles ***/
     .test { border: 2px solid steelblue; }
     .test1 { border: 2px solid mediumaquamarine; }
 </style>
 <body>
+    <svg class="canvas">
+        <!--Diagram generated here-->
+    </svg>
 <script src="d3/d3.js"></script>
 <script>
 
+    var distance = 60;
+    var charge = -300;
+    var width = 960;
+    var height = 500;
     /*** Example from d3noob ***/
 
-    // 0. Data import, everything generated in anon call back
+    // 0. Data import, everything generated in anon call back.
     d3.csv("data/forceDummyData.csv", function(error, links) {
 
         var nodes = {};
@@ -44,6 +52,93 @@
 
             link.value = +link.value; // convert datatype form str to int
         });
+
+        var canvas = d3.select("svg")
+                .attr("height", height)
+                .attr("width", width);
+
+
+        console.log(nodes);
+        var test = d3.values(nodes);
+        console.log(test);
+        // 2. Force layout setup.
+        var forceDiagram = d3.layout.force()
+                .nodes(d3.values(nodes))
+                .links(links)
+                .size([width, height])
+                .linkDistance(distance)
+                .charge(charge)
+                .on("tick", tick)
+                .start();
+
+        // 3. Taken directly from d3noob, creates the arrow heads and links in SVG
+        canvas.append("svg:defs").selectAll("marker")
+                .data(["end"])
+                .enter().append("svg:marker")
+                .attr("id", String)
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 15)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("svg:path")
+                .attr("d", "M0, -5L10,0L0,5");
+
+        var path = canvas.append("svg:g").selectAll("path")
+                .data(forceDiagram.links())
+                .enter().append("svg:path")
+                .attr("class", "link")
+                .attr("marker-end", "url(#end)");
+
+        var node = canvas.selectAll(".node")
+                .data(forceDiagram.nodes())
+                .enter().append("g")
+                .attr("class", "node")
+                .call(forceDiagram.drag);
+
+        node.append("circle")
+                .attr("r", 5);
+
+        node.append("text")
+                .attr("x", 5)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.name; });
+
+
+        function tick() {
+            path.attr("d", function(d) {
+                var dx = d.target.x - d.source.x,
+                        dy = d.target.y - d.source.y,
+                        dr = Math.sqrt(dx * dx + dy * dy);
+
+                // view the path data
+
+//                var pathData = ("M" +
+//                        d.source.x + "," +
+//                        d.source.y + "A" +
+//                        dr + "," + dr + " 0 0,1 " +
+//                        d.target.x + "," +
+//                        d.target.y);
+//
+//                console.log(pathData);
+
+                return "M" +
+                        d.source.x + "," +
+                        d.source.y + "A" +
+                        dr + "," + dr + " 0 0,1 " +
+                        d.target.x + "," +
+                        d.target.y;
+
+            });
+
+
+
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        }
+
 
 
 
