@@ -1,44 +1,50 @@
 {
    "EntityList":[
       {
-         "name":"OpenshipOrder",
-         "attriubtes":{
-            "attriubte1":{
-               "name":"WebAuthenticationDetail",
-               "type":"WebAuthenticationDetail"
+         "name": "OpenshipOrder",
+         "attriubtes": {
+            "attriubte1": {
+               "name": "WebAuthenticationDetail",
+               "type": "WebAuthenticationDetail"
             },
-            "attriubte2":{
-               "name":"ClientDetail",
-               "type":"ClientDetail"
+            "attriubte2": {
+               "name": "ClientDetail",
+               "type": "ClientDetail"
             },
-            "attriubte3":{
-               "name":"TransactionDetail",
-               "type":"TransactionDetail"
+            "attriubte3": {
+               "name": "TransactionDetail",
+               "type": "TransactionDetail"
             },
-            "attriubte4":{
-               "name":"Version",
-               "type":"VersionId"
+            "attriubte4": {
+               "name": "Version",
+               "type": "VersionId"
             },
-            "attriubte5":{
-               "name":"Index",
-               "type":"string"
+            "attriubte5": {
+               "name": "Index",
+               "type": "string"
             },
-            "attriubte6":{
-               "name":"Actions",
-               "type":"AddPackagesToOpenShipmentActionType"
+            "attriubte6": {
+               "name": "Actions",
+               "type": "AddPackagesToOpenShipmentActionType"
             },
-            "attriubte7":{
-               "name":"RequestedPackageLineItems",
-               "type":"RequestedPackageLineItem"
+            "attriubte7": {
+               "name": "RequestedPackageLineItems",
+               "type": "RequestedPackageLineItem"
             }
          },
-         "children":{
-            "child1":{
-               "name":"TrackingId",
-               "type":"TrackingId"
+         // Must follow this naming convention
+
+         "children": [
+            {
+               "name": "TrackingId",
+               "type": "TrackingId"
+            },
+            {
+               "name": "test",
+               "type": "lkjdflsjdf"
             }
-         }
-      },
+         ]
+
       {
          "name":"UserCredentialWebAuthenticationCredential",
          "attriubtes":{
