@@ -19,12 +19,15 @@
             {"name": "WebAuthenticationDetail", "attribute": "attribute1", "attribute": "attribute2"},
             {"name": "ClientDetail"},
             {"name": "TransactionDetail"},
-            {"name": "TransactionDetail", 
+            {"name": "TransactionDetail",
+
                 "children":
                 {
-                    {"name": "child1", "attribute": "anything"},
-                    {"name": "child2", "attribute": "anything"}
+                    {"name": "placeholder_name", "attribute": "anything"},
+                    {"name": "name", "attribute": "anything"}
                 }
+
+
             }
         }
 }

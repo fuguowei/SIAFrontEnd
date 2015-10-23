@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    path.link {
+        fill: none;
+        stroke: #666; /* med grey */
+        stroke-width: 1.5px;
+    }
+
+    circle {
+        fill: #ccc; /* light grey */
+        stroke: #fff /* white */
+    }
+
+    text {
+        fill: #000;
+        font: 10px sans-serif;
+        pointer-events: none;
+    }
+
+
+    /*** Debugging Styles ***/
+    .test { border: 2px solid steelblue; }
+    .test1 { border: 2px solid mediumaquamarine; }
+</style>
+<body>
+    <svg class="canvas">
+        <!--Diagram generated here-->
+    </svg>
+<script src="d3/d3.js"></script>
+<script>
+
+    var distance = 60;
+    var charge = -300;
+    var width = 960;
+    var height = 500;
+    /*** Example from d3noob ***/
+
+    // 0. Data import, everything generated in anon call back.
+    d3.csv("data/forceDummyData.csv", function(error, links) {
+
+        var nodes = {};
+
+        // 1. Compute the distinct nodes from the links
+        links.forEach(function(link) {
+
+            link.source = nodes[link.source] ||
+                    (nodes[link.source] = {name: link.source}); //populate the source into nodes if it doesn't exist
+            link.target = nodes[link.target] ||
+                    (nodes[link.target] = {name: link.target}); //pouplate the target into nodes if it doesn't exist
+
+            link.value = +link.value; // convert datatype form str to int
+        });
+
+        var canvas = d3.select("svg")
+                .attr("height", height)
+                .attr("width", width);
+
+
+        console.log(nodes);
+        var test = d3.values(nodes);
+        console.log(test);
+        // 2. Force layout setup.
+        var forceDiagram = d3.layout.force()
+                .nodes(d3.values(nodes))
+                .links(links)
+                .size([width, height])
+                .linkDistance(distance)
+                .charge(charge)
+                .on("tick", tick)
+                .start();
+
+        // 3. Taken directly from d3noob, creates the arrow heads and links in SVG
+        canvas.append("svg:defs").selectAll("marker")
+                .data(["end"])
+                .enter().append("svg:marker")
+                .attr("id", String)
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 15)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("svg:path")
+                .attr("d", "M0, -5L10,0L0,5");
+
+        var path = canvas.append("svg:g").selectAll("path")
+                .data(forceDiagram.links())
+                .enter().append("svg:path")
+                .attr("class", "link")
+                .attr("marker-end", "url(#end)");
+
+        var node = canvas.selectAll(".node")
+                .data(forceDiagram.nodes())
+                .enter().append("g")
+                .attr("class", "node")
+                .call(forceDiagram.drag);
+
+        node.append("circle")
+                .attr("r", 5);
+
+        node.append("text")
+                .attr("x", 5)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.name; });
+
+
+        function tick() {
+            path.attr("d", function(d) {
+                var dx = d.target.x - d.source.x,
+                        dy = d.target.y - d.source.y,
+                        dr = Math.sqrt(dx * dx + dy * dy);
+
+                // view the path data
+
+//                var pathData = ("M" +
+//                        d.source.x + "," +
+//                        d.source.y + "A" +
+//                        dr + "," + dr + " 0 0,1 " +
+//                        d.target.x + "," +
+//                        d.target.y);
+//
+//                console.log(pathData);
+
+                return "M" +
+                        d.source.x + "," +
+                        d.source.y + "A" +
+                        dr + "," + dr + " 0 0,1 " +
+                        d.target.x + "," +
+                        d.target.y;
+
+            });
+
+
+
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        }
+
+
+
+
+    });
+
+
+/*** Basic Example - two nodes***/
+//    var nodes = [
+//        {x: width/3, y: height/2},
+//        {x: 2* width/3, y: height/2}
+//    ];
+//
+//    // values are the indicies of the nodes array
+//    var links = [
+//        { source: 0, target: 1}
+//    ];
+//
+//    // 0. Initial set up
+//    var margin = {top: 30, bottom: 30, left: 20, right: 20};
+//    var height = 800 - margin.top - margin.bottom;
+//    var width = 500 - margin.right - margin.left;
+//
+//    // 1. Add canvas to body
+//    var canvas = d3.select('body').append('svg')
+//            .attr("width", width)
+//            .attr("height", height);
+//
+//    // 2.
+//    var force = d3.layout.force()
+//            .size([width, height])
+//            .nodes(nodes)
+//            .links(links);
+//
+//    // ???
+//    force.linkDistance(width/2);
+//
+//    var node = canvas.selectAll('.node')
+//            .data(nodes)
+//            .enter()
+//            .append("circle")
+//            .attr("class", "node");
+//
+//
+//    var link = canvas.selectAll("path")
+//            .data(links)
+//            .enter()
+//            .append("line")
+//            .attr("class", "path");
+//
+//    force.on('end', function() {
+//
+//        node.attr('r', width/25)
+//                .attr('cx', function(d) { return d.x; })
+//                .attr('cy', function(d) { return d.y; });
+//
+//        link.attr('x1', function(d) { return d.source.x; })
+//                .attr('y1', function(d) { return d.source.y; })
+//                .attr('x2', function(d) { return d.target.x; })
+//                .attr('y2', function(d) { return d.target.y; });
+//    });
+//
+//    force.start();
+
+
+</script>
+
+</body>
