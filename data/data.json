@@ -31,20 +31,7 @@
                "name": "RequestedPackageLineItems",
                "type": "RequestedPackageLineItem"
             }
-         },
-         // Must follow this naming convention
-
-         "children": [
-            {
-               "name": "TrackingId",
-               "type": "TrackingId"
-            },
-            {
-               "name": "test",
-               "type": "lkjdflsjdf"
-            }
-         ]
-
+         }
       {
          "name":"UserCredentialWebAuthenticationCredential",
          "attriubtes":{

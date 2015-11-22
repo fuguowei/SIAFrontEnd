@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    .node {
+        cursor: pointer;
+    }
+
+    .node circle {
+        stroke-width: 3px;
+        fill: steelblue;
+    }
+
+    .node text {
+        font: 11px sans-serif;
+        pointer-events: none;
+    }
+
+    path.link {
+        font:10px sans-serif;
+        stroke: #ddd;
+        fill: none;
+        stroke-width: 1.5px;
+    }
+
+    /*** Debugging Styles ***/
+    .test { border: 2px solid steelblue; }
+    .test1 { border: 2px solid mediumaquamarine; }
+</style>
+<body>
+
+<script src="d3/d3.js"></script>
+
+<script>
+
+    d3.json("data/JSON_master", function(data) {
+
+        var h_tree_data = { name: "root", children: []};
+//
+//        console.log(data);
+//
+//        console.log(typeof(data));
+//
+//        console.log(data.entities);
+//        data.entities.forEach(function(a) {
+//
+//            // 1. Entitiy names
+//            //console.log(a.name)
+//
+//        });
+
+        //console.log(data.nestingPair.length);
+//        data.nestingPair.forEach(function(node) {
+//
+//            // get the parent element
+//            // get the child element
+//            // check if the parent element exists?
+//            // add it to the object
+//
+//
+////            var parent = node.strMainEntity;
+////            var child = node.strSlaveEntity;
+////
+////            if(!add_child(h_tree_data.children, parent, child)) {
+////                h_tree_data.children.push({name: parent, children: [{name: child}] })
+////            }
+//
+//        });
+
+        var processed_data = process_nesting_pair(data.nestingPair);
+        console.log(processed_data);
+
+        console.log(JSON.stringify(processed_data.children, "LabelSpecification"));
+
+        //console.log(h_tree_data);
+
+    });
+
+    var test_data = {
+
+        "name": "tree",
+        "children" : [
+            {
+                "name": "0_a",
+                "children": [
+                    {
+                        "name": "1_a",
+                        "children": [
+                            {
+                                "name": "2_a",
+                                "children": [
+                                    {
+                                        "name": "3_a"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "1_b",
+                        "children": [
+                            {
+                                "name": "2_b"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "1_c"
+                    }
+                ]
+            },
+            {
+                "name": "0_b"
+            }
+        ]
+    };
+
+    var ez_data = {
+        "name": "tree",
+        "children" : [
+            {
+                "name": "0_a",
+                "children": [
+                    {
+                        "name": "1_a",
+                    },
+                    {
+                        "name": "1_b",
+                    }
+                ]
+            },
+            {
+                "name": "0_b",
+                children: [
+                    {
+                        "name": "1_c"
+                    }
+                ]
+            }
+        ]
+    };
+
+    var sample_nesting_pair = [
+        {
+            "strMainEntity":"main",
+            "strSlaveEntity":"swag"
+        },
+        {
+            "strMainEntity":"main",
+            "strSlaveEntity":"yolo"
+        },
+        {
+            "strMainEntity":"yolo",
+            "strSlaveEntity":"bleh"
+        },
+        {
+            "strMainEntity":"test",
+            "strSlaveEntity":"meh"
+        },
+        {
+            "strMainEntity":"yolo",
+            "strSlaveEntity":"test"
+        }
+    ];
+
+    function process_nesting_pair(nesting_pair_data) {
+        var processed_pairs = {name: "main", children:[]};
+        for(i = 0; i < nesting_pair_data.length; i++) {
+
+            var parent = nesting_pair_data[i].strMainEntity;
+            var child = nesting_pair_data[i].strSlaveEntity;
+
+            var result = add_child(processed_pairs.children, parent, child);
+
+            if(!result) {
+                processed_pairs.children.push({name: parent, children: [{name: child}]});
+            }
+        }
+        return processed_pairs;
+    }
+
+    function fix_hierarchy(processed_data, relationship_data) {
+
+        // for each relationship pair Parent + Child
+            // check if the child exists for the given parent
+            // if not
+                // get the child object
+                // and move it to the parent's children array,
+                // then delete the child object
+
+        // das it mane
+
+        // for each relationship
+        for(var i = 0; i < relationship_data.length; i++) {
+
+            // check if the parent-child relationship exists
+
+
+
+        }
+
+    }
+
+//    function get_object_no_children(data, name) {
+//        var object = {};
+//
+//
+//        for(var i = 0; i < data.length; i++) {
+//
+//            if(data[i].name == name) {
+//                object = data[i];
+//                return object;
+//            }
+//            if (data[i].children != null) {
+//                object = get_object(data[i].children, name);
+//                if(Object.keys(object).length > 0) {
+//                    return object
+//                }
+//            }
+//
+//        }
+//        return object;
+//    }
+
+    function check_parent_has_child(processed_data, parent, child) {
+        for(var i = 0; i < processed_data.length; i++) {
+            if(processed_data[i].name == parent && processed_data[i].children != null) {
+                for(var j = 0; j < processed_data[i].children.length; j++) {
+                    if(processed_data[i].children[j] == child) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    function get_object_with_children(data, name) {
+        var object = {};
+
+
+        for(var i = 0; i < data.length; i++) {
+
+            if(data[i].name == name && data[i].children != null) {
+                object = data[i];
+                return object;
+            }
+            if (data[i].children != null) {
+                object = get_object_with_children(data[i].children, name);
+                if(Object.keys(object).length > 0) {
+                    return object
+                }
+            }
+
+        }
+        return object;
+    }
+
+
+
+    function find_node(data, name) {
+
+        var result = false;
+
+        for(var i = 0; i < data.length; i++) {
+
+            if(data[i].name == name) {
+                result = true;
+            }
+            if (data[i].children != null) {
+                result = find_node(data[i].children, name);
+                if(result) {
+                    return result;
+                }
+            }
+
+        }
+
+        return result;
+    }
+
+    // Insert a child element for a given object name
+    function add_child(object, name, child_name) {
+
+        var result = false;
+
+        for(var i = 0; i < object.length; i++) {
+
+            // 1. if the name is found
+            if(object[i].name == name) {
+                // 2. check if child, use push to add
+                if(object[i].children != null) {
+                    object[i].children.push({name: child_name});
+                    result = true;
+                    return result;
+                }
+                else {
+                    object[i].children = [{name: child_name}];
+                    result = true;
+                    return result;
+                }
+            }
+
+            if (object[i].children != null) {
+
+                result = add_child(object[i].children, name, child_name);
+                if(result) {
+                    return true;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /* Test Cases */
+    //console.log(add_child(ez_data.children, "1_a", "2_a"));
+    //console.log(add_child(test_data.children, "0_b", "1_b"));
+    //console.log(find_node(ez_data.children, "0_b"));
+
+    //ez_data.children[0].children.push(a);
+
+    //console.log(ez_data);
+
+
+</script>
+</body>
