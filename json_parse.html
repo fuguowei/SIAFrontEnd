@@ -69,8 +69,10 @@
 
         var processed_data = process_nesting_pair(data.nestingPair);
         console.log(processed_data);
-
-        console.log(JSON.stringify(processed_data.children, "LabelSpecification"));
+        console.log(check_occurrences(processed_data.children, 'Consolidation'));
+//        var test_object = get_object_with_children(processed_data.children, "LabelSpecification");
+//        console.log(test_object);
+        //console.log(JSON.stringify(processed_data.children, "LabelSpecification"));
 
         //console.log(h_tree_data);
 
@@ -122,10 +124,13 @@
                 "name": "0_a",
                 "children": [
                     {
-                        "name": "1_a",
+                        "name": "1_a"
                     },
                     {
-                        "name": "1_b",
+                        "name": "1_b"
+                    },
+                    {
+                        "name": "yolo"
                     }
                 ]
             },
@@ -133,9 +138,24 @@
                 "name": "0_b",
                 children: [
                     {
-                        "name": "1_c"
+                        "name": "1_c",
+                        children: [
+                            {
+                                "name": "yolo"
+                            },
+                            {
+                                "name": "1_a"
+                            }
+                        ]
                     }
                 ]
+            },
+            {
+                name: "yolo"
+            },
+            {
+                name: "1_a",
+                children: [{name: "test"}, {name:"test"}]
             }
         ]
     };
@@ -191,14 +211,47 @@
         // das it mane
 
         // for each relationship
-        for(var i = 0; i < relationship_data.length; i++) {
+        for (var i = 0; i < relationship_data.length; i++) {
 
-            // check if the parent-child relationship exists
+
+            // check if the the child exists in multiple places
+                // if it does,
+                // get the child object which contains children and save it as a variable
+                // move it to everyplace that contains the child with the same name that has no children
+
+            var child_entity = relationship_data[i].strSlaveEntity;
+            var occurrences = check_occurrences(child_entity);
+
+            if(occurrences > 1) {
+
+                var correct_child_entity = get_object_with_children(relationship_data, child_entity);
+
+
+
+            }
+
 
 
 
         }
 
+    }
+    /***
+     *
+     *
+     * ***/
+    function check_occurrences(data, name) {
+        var counter = 0;
+        for (var i = 0; i < data.length; i++) {
+            if(data[i].name == name) {
+                counter++;
+            }
+            if(data[i].children != null) {
+                var counter_recursive = check_occurrences(data[i].children, name)
+                counter = counter + counter_recursive;
+            }
+        }
+        return counter;
     }
 
 //    function get_object_no_children(data, name) {
@@ -238,7 +291,6 @@
     function get_object_with_children(data, name) {
         var object = {};
 
-
         for(var i = 0; i < data.length; i++) {
 
             if(data[i].name == name && data[i].children != null) {
@@ -256,6 +308,18 @@
         return object;
     }
 
+
+    function replace_entity(data, entity_name, entity_object) {
+        for(var i = 0; i < data.length; i++) {
+
+            if(data[i].name == entity_name && data[i].children == null) {
+                data[i] = entity_object;
+            }
+            else if (data[i].children != null) {
+                replace_entity(data[i].children, entity_name, entity_object);
+            }
+        }
+    }
 
 
     function find_node(data, name) {
@@ -321,6 +385,12 @@
     //ez_data.children[0].children.push(a);
 
     //console.log(ez_data);
+    //console.log(check_occurrences(ez_data.children, "yolo"));
+//    var test_object = get_object_with_children(ez_data.children, "1_a");
+//    console.log(test_object);
+//    replace_entity(ez_data.children, "1_a", test_object);
+//    console.log(ez_data);
+
 
 
 </script>
