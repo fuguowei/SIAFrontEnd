@@ -1,0 +1,224 @@
+/* --------------------------------------------------------
+Style Sheet for Service Integration Accelerator
+
+version: 1.0
+last modified: 24.05.2015 by Asad Parvez
+author: Asad Parvez
+----------------------------------------------------------*/
+
+/* ----------------------- 
+	HIGH LEVEL
+-------------------------- */
+
+body{
+	background-color: #1A1A1A;
+	padding: 15px;
+	color: #fff;
+	font-family: "Droid Sans", Sans-serif;
+}
+.left{
+	float: left;
+}
+.right{
+	float: right;
+}
+.center{
+	margin: 0 auto;
+}
+.inline{
+	display: inline-block
+}
+.text-center{
+	text-align: center;
+}
+.height-wrap-content{
+	overflow: hidden;
+	height: auto;
+}
+h1{
+	font-weight: bold;
+	font-size: 26px;
+	line-height: 1.2;
+}
+#page_master{
+	min-width: 900px;
+
+}
+
+/* ------------------------ 
+	SIDEBAR      			 
+--------------------------- */
+
+#sidebar{
+	width: 230px;
+	height: auto;
+	padding: 15px;
+    float:left;
+}
+#service_description{
+	font-size: 0.9em;	
+	padding: 20px 0px;
+	line-height: 1.2;
+	color: #DFDFDF;
+}
+.service-name{
+	font-size: 15px; 
+	font-weight: bold;
+	padding: 10px 10px;
+	display: inline-block;
+}
+.service-name:hover{
+	cursor: pointer;
+}
+.service-ops{
+	padding: 0px 0px 10px 0px;
+	height: auto;
+}
+.service-ops li a{
+	font-family: "Roboto Light", sans-serif;
+	font-size: 0.8em;
+	display: block;
+	width: auto;
+	padding: 6px 35px;
+}
+.service-ops li{
+	border-radius: 4px;
+	color: #ccc;
+}
+.service-ops li:hover{
+	cursor: pointer;
+	color: #fff;
+}
+.service-ops li.selected{
+	color: #00CC66;
+}
+.menu-mask{
+	overflow: hidden;
+	height: auto;
+}
+.sidebar-heading{
+	font-size: 16px;
+	font-weight: bold;
+	margin: 20px 10px 15px 10px;
+	display: inline-block;
+}
+.sidebar-subheading{
+	font-family: "Roboto Light", sans-serif;
+	font-size: 0.8em;
+	margin: 10px 30px;
+	display: inline-block;
+}
+.sidebar-subheading img{
+	margin-right: 15px;
+	position: relative;
+	top: 2px;
+}
+#help{
+	font-family: "Roboto", sans-serif;
+	font-size: 0.9em;
+	color: #333;
+	display: block;
+	margin: 30px 0px 10px 0px;
+	width: 100%;
+	height: 30px;
+	background-color: #e6e6e6; 
+	padding: 15px 0px 0px 0px;
+	text-align: center;
+	text-decoration: none;
+}
+#help:hover{
+	background-color: #fff;
+}
+
+/* ------------------------------
+	CONTENT
+--------------------------------- */
+#content_wrap{
+    margin-left: 280px;
+    min-height:510px;
+    background-color: #292929;
+}
+#mode_selector{
+    width: 100%;
+    height: 75px;
+    background-color: #333;
+}
+#mode_selector a{
+    display: inline-block;
+    width: 33%;
+    height: auto;
+    padding: 30px 0px;
+    text-align: center;
+}
+#new_service{
+    font-family: "Roboto";
+    font-weight: 300;
+    width: auto;
+    display: inline-block;
+    height: auto;
+}
+#new_service:hover{
+	background-color: #212121;
+}
+#upload_box{
+	width: 500px;
+	height: 250px;
+	border-radius: 3px;
+	position: fixed;
+	top: 50vh;
+	left: 50%;
+	margin-top: -160px;
+	margin-left: -230px;
+	background-color: #fff;
+	display: none;
+	opacity: 0;
+	padding: 20px;
+	z-index: 10;
+	color: #333;
+}
+#upload_box p{
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+#black_bg{
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	display: none;
+	opacity: 0;
+	background-color: rgba(0,0,0,0.5);
+}
+#upload_success{
+	background-color: rgba(0, 198, 99, 0.95);
+	width: 100%;
+	height: 50px;
+	position: absolute;
+	top: -80px;
+	left: 0px;
+	padding-top: 30px;
+	text-align: center;
+	font-size: 20px;
+}
+#upload_bar_holder{
+	width: 100%;
+	height: 4px;
+	margin-top: 30px;
+	background-color: #ccc;
+	display: none;
+}
+#upload_bar{
+	width: 0px;
+	height: 4px;
+	background-color: #00CC66;
+}
+#upload_error{
+	margin-top: 20px;
+	font-size: 14px;
+	color: #999;
+}
+.error{
+	color: #FF4545;
+}
