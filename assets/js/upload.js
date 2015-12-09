@@ -20,7 +20,7 @@ function uploadFile(){
     $("#upload_bar_holder").show();   
 
     $.ajax({
-                url: 'upload.php',
+                url: 'app/upload.php',
                 dataType: 'text',  
                 cache: false,
                 contentType: false,
@@ -37,7 +37,11 @@ function uploadFile(){
                         $("#upload_success").animate({top: "-80px"}, 200);
                         $("#upload_bar").css("width", "0%");
                         $("#upload_bar_holder").hide();
+                        $("#fileselect").val('');
                     });
                 }
      });
+    updateSidebar();
+
+
 }

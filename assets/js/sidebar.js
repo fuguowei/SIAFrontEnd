@@ -1,3 +1,8 @@
+$( document ).ready(function() {
+	//updateSidebar();
+});
+
+
 $(function () {
     accordion = function (element) {
 	    open = element.getAttribute("open");
@@ -29,5 +34,21 @@ function uploadBox(){
        		$("#upload_box").hide();
   		});
 	}
-
 }
+
+function updateSidebar(){
+
+	$("#services_container").empty();
+	$.ajax({
+                url: 'app/sidebar.php',
+                dataType: 'text',  
+                cache: false,
+                contentType: false,
+                processData: false,                        
+                type: 'post',
+                success: function(data){
+                	$("#services_container").html(data);
+                }
+     });
+}
+
