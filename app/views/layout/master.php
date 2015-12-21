@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <!doctype html>
 
 <html lang="en">
@@ -28,37 +24,22 @@ session_start();
 				in the setting of global business networks.
 			</p>
 
-			<span onclick="accordion(this);" open="1"><img class="expanded" src="assets/images/expanded.png"><h3 class="service-name">Fedex Services</h2></span>	
-			<div class="menu-mask">
-				<ul class="service-ops">
-					<li class="selected"><a onclick="alert('Open Shipping');">Open Shipping</a></li>
-					<li><a onclick="alert('Pickup Services');">Pickup Services</a></li>
-					<li><a onclick="alert('Close Service');">Close Service</a></li>
-					<li><a onclick="alert('Return Services');">Return Services</a></li>
-					<li><a onclick="alert('General');">General</a></li>
-					<li><a onclick="alert('Tracking and Visibility');">Tracking and Visibility</a></li>
-					<li><a onclick="alert('Package Movement');">Package Movement</a></li>
-				</ul>
+			<div id="services_container">
+				<div id="no_services_message">
+					No services to show
+					<a onclick="uploadBox()">Add a service</a>
+				</div>
 			</div>
 
-			<span onclick="accordion(this);" open="1"><img class="expanded" src="assets/images/expanded.png"><h3 class="service-name">UPS Services</h2></span>
-			<div class="menu-mask">
-				<ul class="service-ops">
-					<li><a onclick="alert('Shipping');">Shipping</a></li>
-					<li><a onclick="alert('Address Validation');">Address Validation</a></li>
-					<li><a onclick="alert('Pickup');">Pickup</a></li>
-					<li><a onclick="alert('Rating');">Rating</a></li>
-					<li><a onclick="alert('Time in Transit');">Time in Transit</a></li>
-					<li><a onclick="alert('Tracking');">Tracking</a></li>
-				</ul>
-			</div>
-			<img src="assets/images/config.png" class="inline"><h2 class="sidebar-heading">System Configuration</h2>
-			<br/>
-			<h4 class="sidebar-subheading"><img src="assets/images/profile_icon.png" class="inline">Service Profile</h4>
-			<br/>
-			<h4 class="sidebar-subheading"><img src="assets/images/ontology_icon.png" class="inline">Ontology Settings</h4>
+				<img src="assets/images/config.png" class="inline"><h2 class="sidebar-heading">System Configuration</h2>
+				<br/>
+				<h4 class="sidebar-subheading"><img src="assets/images/profile_icon.png" class="inline">Service Profile</h4>
+				<br/>
+				<h4 class="sidebar-subheading"><img src="assets/images/ontology_icon.png" class="inline">Ontology Settings</h4>
 
-			<a href="#" id="help">Help</a>
+				<a href="#" id="help">Help</a>
+
+			</div>
 		</div>
 
 		<div id="content_wrap">

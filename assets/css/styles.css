@@ -129,6 +129,21 @@ h1{
 #help:hover{
 	background-color: #fff;
 }
+#no_services_message{
+	width:100%;
+	padding: 20px 0px;
+	margin: 30px 0px;
+	background-color: #333;
+	text-align: center;
+	border-radius: 3px;
+}
+#no_services_message a {
+	font-size: 14px;
+	display: block;
+	margin-top: 10px;
+	text-decoration: underline;
+	cursor: pointer;
+}
 
 /* ------------------------------
 	CONTENT

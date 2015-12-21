@@ -1,5 +1,5 @@
 <?php
-	
+session_start();	
 	/*
 	Determines the file number in the directory
 	*/
@@ -50,9 +50,15 @@
     else {
         move_uploaded_file($_FILES['file']['tmp_name'], 'WSDL/' . $num . '.jpg');
     }
+    
+    $service_id = $num;
+    
+    if(!isset($_SESSION['service_ids'])) {
+        $_SESSION["service_ids"] = array();
+    }
+    
+    array_push($_SESSION["service_ids"], $service_id);
+ 
 
-    $file_loc = 'WSDL/' . $num . '.jpg';
-    $cookie_name = 'file_loc';
-    setcookie($cookie_name, $file_loc);
 	echo $_FILES['file']['name'];
 ?>
