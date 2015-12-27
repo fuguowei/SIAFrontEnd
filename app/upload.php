@@ -48,7 +48,7 @@ session_start();
         echo 'Error: ' . $_FILES['file']['error'] . '<br>';
     }
     else {
-        move_uploaded_file($_FILES['file']['tmp_name'], 'WSDL/' . $num . '.jpg');
+        move_uploaded_file($_FILES['file']['tmp_name'], '../WSDL/' . $num . '.jpg');
     }
     
     $service_id = $num;
