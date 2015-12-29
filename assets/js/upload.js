@@ -41,7 +41,6 @@ function uploadFile(){
                     });
                 }
      });
+    
     updateSidebar();
-
-
 }

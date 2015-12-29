@@ -61,4 +61,5 @@ session_start();
  
 
 	echo $_FILES['file']['name'];
+    var_dump($_SESSION["service_ids"]);
 ?>

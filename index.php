@@ -12,6 +12,10 @@ $app->get('/', function () use($app) {
     $app->render('layout/master.php');
 });
 
+$app->get('/ontology', function () use($app) {
+    $app->render('ontology.php');
+});
+
 // Views
 $view = $app->view();
 $view->setTemplatesDirectory('app/views');

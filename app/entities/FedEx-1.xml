@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<FedEx>
-        <entities>
-                <entity>OpenshipOrder</entity>
-                <entity>Shipment</entity>
-                <entity>Shipper</entity>
-                <entity>Package</entity>
-        </entities>
-</FedEx>
