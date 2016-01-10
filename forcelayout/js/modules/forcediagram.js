@@ -3,33 +3,34 @@ var ForceDiagram = (function() {
     var nodes = [];
     var edges = [];
     var height = 960;
-    var width = 500;
+    var width = 960;
 
     // async
     function init()  {
-        $.getJSON('data/data.json', function(data) {
-            _.each(data.coincidencePair, function(i) {
+        $.getJSON('../data/OpenShip1.json', function(data) {
+            _.each(data.associationPair, function(i) {
                 var node1 = i.strMainEntity;
                 var node2 = i.strSlaveEntity;
                 _addNode(node1, nodes);
                 _addNode(node2, nodes);
             });
-            _addLinks(nodes, data.coincidencePair, edges);
+            _addLinks(nodes, data.associationPair, edges);
             console.log(nodes);
             console.log(edges);
             _render(nodes,edges);
         });
     }
 
-    function _render(nodes, links) {
-        var width = 960,
-            height = 500;
+    function _render(nodeData, linkData) {
+        var charge = -120;
+        var linkDist = 60;
+        var nodeRadius = 8;
 
         var color = d3.scale.category20();
 
         var force = d3.layout.force()
-            .charge(-120)
-            .linkDistance(30)
+            .charge(charge)
+            .linkDistance(linkDist)
             .size([width, height]);
 
         var canvas = d3.select('.canvas')
@@ -37,49 +38,41 @@ var ForceDiagram = (function() {
             .attr('height', height);
 
         force
-            .nodes(nodes)
-            .links(links)
+            .nodes(nodeData)
+            .links(linkData)
             .start();
 
-        var node = canvas.selectAll('.node')
-            .data(nodes)
-            .enter()
-            .append('circle')
-            .attr('class', 'node')
-            .attr('r', 5);
-
-        node.append("title")
-            .text(function(d) { return d.name; });
-
-        var link = canvas.selectAll('.links')
-            .data(links)
+        var links = canvas.selectAll('.links')
+            .data(linkData)
             .enter()
             .append("line")
             .attr("class", "link");
 
-        canvas.append("defs").selectAll("marker")
-            .data(["end"])
-            .enter().append("marker")
-            .attr("id", function(d) { return d; })
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 25)
-            .attr("refY", 0)
-            .attr("markerWidth", 6)
-            .attr("markerHeight", 6)
-            .attr("orient", "auto")
-            .append("path")
-            .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
-            .style("stroke", "#4679BD")
-            .style("opacity", "0.6");
+        var nodes = canvas.selectAll('.node')
+            .data(nodeData)
+            .enter()
+            .append('g')
+            .call(force.drag);
+
+        nodes
+            .append('circle')
+            .attr('class', 'node')
+            .attr('r', nodeRadius);
+
+        nodes
+            .append("text")
+            .attr("x", 12)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.name; });
 
         force.on("tick", function() {
-            link.attr("x1", function(d) { return d.source.x; })
+            links.attr("x1", function(d) { return d.source.x; })
                 .attr("y1", function(d) { return d.source.y; })
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; });
 
-            node.attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
+        nodes
+            .attr("transform", function(d) { return "translate(" + d.x + "," +  d.y + ")"; });
         });
     }
 
@@ -125,6 +118,7 @@ var ForceDiagram = (function() {
         }
         linkList.push({source: nodeIndexes[1], target: nodeIndexes[0]});
         });
+        console.log(linkList);
     }
 
     function getNodes() {
@@ -142,4 +136,166 @@ var ForceDiagram = (function() {
     };
 })();
 
-$(window).load(function() { console.log('start'); ForceDiagram.init(); });
+var Force = (function() {
+    var width = 1000,
+        height =  1000,
+        filePath = '',
+        nodes = [],
+        links = [],
+        charge = -120,
+        linkDist = 50,
+        nodeRadius = 6;
+
+    function _init() {
+        console.log('start init');
+        // if(filePath === null) {
+        //     throw new Error ('filePath for data not set');
+        // }
+        $.getJSON(filePath, function(data) {
+            console.log('test');
+            console.log(data);
+            /**
+             * TEST VARS
+             */
+            var entityNames = [];
+
+            _.each(data.entities,function(item) {
+                var obj = {name: item.name, attributes: item.attributes, compulsory: item.compulsory};
+                nodes.push(obj);
+
+                // check for duplicates in entities
+                if(!_exists(entityNames, item.name)) {
+                    entityNames.push(item.name);
+                } else {
+                    console.log('dupe found');
+                }
+            });
+
+
+            _createLinks(data.associationPair, nodes, 'associationPair', links);
+            _createLinks(data.exclusiveContainmentPair, nodes, 'exclusiveContainmentPair', links);
+            _createLinks(data.weakInclusiveContainmentPair, nodes, 'weakInclusiveContainmentPair', links);
+            _createLinks(data.strongInclusiveContainmentPair, nodes, 'strongInclusiveContainmentPair', links);
+
+            _render(nodes, links);
+            /**
+             * TEST OUTPUT
+             */
+            //console.log(entityNames);
+            // console.log(links);
+            // console.log(nodes);
+        });
+    }
+
+    function _setData(widthInput, heightInput, filePathInput) {
+        width = widthInput;
+        height = heightInput;
+        filePath = filePathInput;
+    }
+
+    function _getFilePath() {
+        return filePath;
+    }
+
+    function _getDimensions() {
+        return {width: width, height: height};
+    }
+
+    function _exists(list, name) {
+        return _.contains(list, name);
+    }
+
+    function _createLinks(linkData, nodes, linkType, links) {
+        _.each(linkData, function(link) {
+            var parent = {name: link.strMainEntity},
+                child = {name: link.strSlaveEntity},
+                nodeIndexes = [];
+
+            var parentIndex = _getNodeIndex(nodes, link.strMainEntity),
+                childIndex = _getNodeIndex(nodes, link.strSlaveEntity);
+
+            links.push({source: parentIndex, target: childIndex, linkType: linkType});
+        });
+    }
+
+    function _getNodeIndex(nodes, nodeName) {
+        var index =  null;
+        var instances = 0;
+        _.each(nodes, function(node, i) {
+            if(node.name === nodeName) {
+                console.log('found');
+                instances++;
+                index = i;
+            }
+        });
+        return index;
+    }
+
+    function _render(nodeData, linkData) {
+
+        var color = d3.scale.category20();
+
+        var force = d3.layout.force()
+            .charge(charge)
+            .linkDistance(linkDist)
+            .size([width, height]);
+
+        var canvas = d3.select('.canvas')
+            .attr('width', width)
+            .attr('height', height);
+
+        force
+            .nodes(nodeData)
+            .links(linkData)
+            .start();
+
+        var links = canvas.selectAll('.links')
+            .data(linkData)
+            .enter()
+            .append("line")
+            .attr("class", "link");
+
+        var nodes = canvas.selectAll('.node')
+            .data(nodeData)
+            .enter()
+            .append('g')
+            .call(force.drag);
+
+        nodes
+            .append('circle')
+            .attr('class', 'node')
+            .attr('r', nodeRadius);
+
+        nodes
+            .append("text")
+            .attr("x", 12)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.name; });
+
+        force.on("tick", function() {
+            links.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+        nodes
+            .attr("transform", function(d) { return "translate(" + d.x + "," +  d.y + ")"; });
+        });
+    }
+
+    return {
+        setData: _setData,
+        getDimensions: _getDimensions,
+        getFilePath: _getFilePath,
+        init: _init
+    };
+})();
+
+$(window).load(function() {
+    console.log('starting force diagram');
+    console.log('....');
+    console.log('setting width, height and data file path...');
+    Force.setData(1000, 1000, '../data/OpenShip1.json');
+    console.log('init force diagram to DOM');
+    Force.init();
+});
