@@ -1,10 +1,10 @@
 $('input[type=file]').on('change', uploadFile);
 
 function uploadFile(){
-
+    var animationTime = 10000;
     var file_data = $('#fileselect').prop('files')[0]; 
     var ext = $("#fileselect").val().split('.').pop().toLowerCase();
-    if ($.inArray(ext, ['jpg']) == -1){
+    if ($.inArray(ext, ['wsdl']) == -1){
         $("#upload_error").html("<p class='error'>Please choose a WSDL file</p>");
         return;
     }
@@ -28,7 +28,7 @@ function uploadFile(){
                 data: form_data,                         
                 type: 'post',
                 success: function(filename){
-                    $("#upload_bar").animate({width: "100%"}, 1000, function () {
+                    $("#upload_bar").animate({width: "100%"}, animationTime, function () {
 
                         uploadBox();
                         $("#upload_error").html("");
