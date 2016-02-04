@@ -134,7 +134,7 @@ h1{
 	background-color: #fff;
 }
 #services_container{
-	overflow: scroll;
+	overflow: auto;
 	max-height: 500px;
 }
 #no_services_message{

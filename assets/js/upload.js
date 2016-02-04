@@ -38,9 +38,10 @@ function uploadFile(){
                         $("#upload_bar").css("width", "0%");
                         $("#upload_bar_holder").hide();
                         $("#fileselect").val('');
+                        updateSidebar();
                     });
                 }
      });
     
-    updateSidebar();
+    
 }
