@@ -31,16 +31,16 @@ else{
 			echo '<span onclick="accordion(this);" open="1">
 			<img class="expanded" src="assets/images/expanded.png">
 			<h3 class="service-name">'.$service_name.'</h3>
-			</span>	
+			</span>
 				<div class="menu-mask">
 					<ul class="service-ops">';
-			
-			while(! feof($fh))	
+
+			while(! feof($fh))
 			{
 				echo '<li><a>'.fgets($fh).'</a></li>';
 			}
 			echo "</ul></div>";
-			
+
 			fclose($fh);
 		}
 	}
