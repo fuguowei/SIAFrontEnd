@@ -22,13 +22,13 @@ session_start();
 		<div id="sidebar">
 			<h1>Service<br/>Integration<br/>Accelerator</h1>
 			<p id="service_description">
-				This tool synthesises the structural and behavioural interfaces of services, 
-				and then normalises them for service adaptation in a sevice integration process 
+				This tool synthesises the structural and behavioural interfaces of services,
+				and then normalises them for service adaptation in a sevice integration process
 				in the setting of global business networks.
 			</p>
 
 			<div id="services_container">
-				
+
 			</div>
 
 				<img src="assets/images/config.png" class="inline"><h2 class="sidebar-heading">System Configuration</h2>
@@ -72,18 +72,18 @@ session_start();
 					<option>Amazon</option>
 	        	</select>
 	        	<h3>Add Ontologies</h3>
-	        	
+
 	        	<div id="added_ontology_holder">
 	        		<input type="text" id="ontology" placeholder="Ontology Name">
 	        			<a onclick="remove_ontology();"></a>
 	        		</input>
 	        	</div>
-	        	<a id="add_ontology" class="add-ontology-button">Create New Ontology</a>
+	        	<a id="add_ontology" class="add-ontology-button">Create New Ontology Setting</a>
 	        	<a id="done_ontology" class="add-ontology-button done-button">Done</a>
         	</form>
         </div>
 
-		<!-- CONTENT --> 
+		<!-- CONTENT -->
 
 		<div id="content_wrap">
             <div id="mode_selector">

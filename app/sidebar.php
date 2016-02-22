@@ -9,7 +9,7 @@ if(!isset($_SESSION['service_ids'])) {
 }
 else{
 	$service_ids = $_SESSION['service_ids'];
-	$dir = "../entities";
+	$dir = "../entities/";
 	$files = array_slice(scandir($dir), 2);
 	$file_names = array();
 
@@ -25,22 +25,22 @@ else{
 	}
 
 	foreach ($file_names as &$file_name) {
-		if ($fh = fopen($dir."/".$file_name, "r")) {
+		if ($fh = fopen($dir.$file_name, "r")) {
 			$service_name = fgets($fh);
 
 			echo '<span onclick="accordion(this);" open="1">
 			<img class="expanded" src="assets/images/expanded.png">
 			<h3 class="service-name">'.$service_name.'</h3>
-			</span>	
+			</span>
 				<div class="menu-mask">
 					<ul class="service-ops">';
-			
-			while(! feof($fh))	
+
+			while(! feof($fh))
 			{
 				echo '<li><a>'.fgets($fh).'</a></li>';
 			}
 			echo "</ul></div>";
-			
+
 			fclose($fh);
 		}
 	}

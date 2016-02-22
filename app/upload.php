@@ -7,14 +7,14 @@ session_start();
     	$max = 0;
 
     	// Empty case
-		if(is_dir_empty($directory.'/')){
+		if(is_dir_empty($directory)){
 			$num = 1;
 		}
 
 		// Non-empty case
 		else{
-			foreach(glob($directory.'/*.*') as $file) {
-				$num = basename($file, ".jpg");
+			foreach(glob($directory.'*.*') as $file) {
+				$num = basename($file, ".wsdl");
 				if ($num > $max){
 					$max = $num;
 				}
@@ -39,7 +39,7 @@ session_start();
     	return TRUE;
     }
 
-    $directory = "WSDL";
+    $directory = "../data/WSDL/";
 	$max = 0;
 
 	$num = number_assign($directory);
@@ -48,7 +48,7 @@ session_start();
         echo 'Error: ' . $_FILES['file']['error'] . '<br>';
     }
     else {
-        move_uploaded_file($_FILES['file']['tmp_name'], '../WSDL/' . $num . '.jpg');
+        move_uploaded_file($_FILES['file']['tmp_name'], $directory . $num . '.wsdl');
     }
     
     $service_id = $num;
@@ -61,5 +61,4 @@ session_start();
  
 
 	echo $_FILES['file']['name'];
-    var_dump($_SESSION["service_ids"]);
 ?>
