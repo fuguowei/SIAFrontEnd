@@ -143,8 +143,15 @@ var Force = (function() {
         links = [],
         charge = -100,
         linkDist = 50,
-        nodeRadius = 6;
-        title = "Business Entity Data Model: FedEx OpenShipping Service";
+        nodeRadius = 6,
+        title = "Business Entity Data Model: FedEx OpenShipping Service",
+        legendInfo = [
+            {name: "associationPair", lineStyle: "5, 5, 1, 5", y: 55 },
+            {name: "exclusiveContainmentPair", lineStyle: "5, 1", y: 80},
+            {name: "weakInclusiveContainmentPair", lineStyle: "0.9", y: 105},
+            {name: "strongInclusiveContainmentPair", lineStyle: "15, 10, 5, 10", y: 130}
+        ],
+        force;
 
     function _init() {
         console.log('start init');
@@ -164,7 +171,7 @@ var Force = (function() {
                 // check for duplicates in entities
                 if(!_exists(entityNames, item.name)) {
                     entityNames.push(item.name);
-                    console.log(item.name);
+                    // console.log(item.name);
                 } else {
                     console.log('dupe found');
                 }
@@ -182,6 +189,19 @@ var Force = (function() {
             //console.log(entityNames);
             // console.log(links);
             // console.log(nodes);
+            // setTimeout(function() {
+            //     // console.log(force.linkDistance());
+            //     force.linkDistance(force.linkDistance() * 2.5);
+            //     force.charge(force.charge() * 2.5);
+            //
+            //     force.start();
+            //     console.log('grow');
+            // }, 6000);
+
+
+
+
+
         });
     }
 
@@ -235,7 +255,7 @@ var Force = (function() {
 
         var color = d3.scale.category20();
 
-        var force = d3.layout.force()
+        force = d3.layout.force()
             .charge(charge)
             .linkDistance(linkDist)
             .size([width, height]);
@@ -267,6 +287,31 @@ var Force = (function() {
             .style("stroke", "#FFF");
 
             // .attr("fill", "#FFF");
+        var legend = canvas.append("g")
+            .attr("class", "legend");
+
+
+
+        var legendLines = legend.selectAll("line.legend-line")
+            .data(legendInfo)
+            .enter()
+            .append("line")
+            .attr("class", "legend-line")
+            .attr("x1", 10)
+            .attr("x2", 150)
+            .attr("y1", function(d, i) { return d.y; })
+            .attr("y2", function(d, i) { return d.y; })
+            .attr("stroke-dasharray", function(d) { return d.lineStyle; });
+
+        var legendText = legend.selectAll("text.legend-text")
+            .data(legendInfo)
+            .enter()
+            .append("text")
+            .attr("class", "legend-text")
+            .attr("x", 10)
+            .attr("y", function(d, i) { return d.y-5; })
+            .text(function(d) { return d.name; });
+
 
         force
             .nodes(nodeData)
@@ -292,8 +337,7 @@ var Force = (function() {
                     return "15, 10, 5, 10";
                 }
             })
-            .attr("marker-end", "url(#arrow-head)")
-;
+            .attr("marker-end", "url(#arrow-head)");
             // .style("stroke", function(d) {
             //     if(d.linkType === 'associationPair') {
             //         return "red";
@@ -334,13 +378,77 @@ var Force = (function() {
                 .attr("x1", function(d) { return d.target.x; })
                 .attr("y1", function(d) { return d.target.y; });
 
-        function get_related_nodes() {
 
-        }
 
         nodes
             .attr("transform", function(d) { return "translate(" + d.x + "," +  d.y + ")"; });
         });
+
+        // brush
+        var x = d3.scale.linear()
+            .domain([0, 2.5]) // inputs
+            .range([0, 200]) // outputs
+            .clamp(true); // restrained to inputs
+
+        canvas
+        .append("g")
+        .attr("class", "slider-container")
+        .attr("transform", "translate(15," + 10 + ")")
+        .append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + 10 + ")")
+        .call(d3.svg.axis()
+            .scale(x)
+            .orient("bottom")
+            // .tickFormat(function(d) { return d + "%"; })
+            .tickSize(0)
+            .tickPadding(10))
+        .select(".domain")
+        .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+        .attr("class", "halo");
+
+        var brush = d3.svg.brush()
+            .x(x)
+            .extent([0, 0])
+            .on("brush", brushed)
+            .on("brushend", brushend);
+
+        var slider = d3.select(".slider-container").append("g")
+            .attr("class", "slider")
+            .call(brush);
+
+        var handle = slider.append("circle")
+            .attr("class", "handle")
+            .attr("transform", "translate(0," + 10 + ")")
+            .attr("r", 9);
+
+
+        slider
+            .selectAll(".extent,.resize")
+            .remove();
+
+        function brushend() {
+            var value = brush.extent()[0];
+            force.linkDistance(linkDist + linkDist * value);
+            force.charge(charge + charge * value);
+            force.start();
+        }
+
+        function brushed() {
+          var value = brush.extent()[0];
+
+          if (d3.event.sourceEvent) { // not a programmatic event
+            value = x.invert(d3.mouse(this)[0]);
+            brush.extent([value, value]);
+          }
+          handle.attr("cx", x(value));
+        }
+
+
+    }
+
+    function _test() {
+        console.log(force);
     }
 
     return {
@@ -360,4 +468,7 @@ $(window).load(function() {
     Force.setData(1200, 1000, '../data/OpenShip1.json');
     console.log('init force diagram to DOM');
     Force.init();
+    // $("g.slider").mouseup(function(e) {
+    //     console.log('hello');
+    // });
 });

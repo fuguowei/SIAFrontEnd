@@ -5,6 +5,16 @@
     stroke-width: 1px;
 }
 
+line.legend-line {
+    fill: none;
+    stroke: #FFF;
+    stroke-width: 2.5px;
+}
+
+text.legend-text {
+    font-size: 10px;
+}
+
 circle {
     /*fill: #3498DB;*/
     /*fill: #76D7C4;*/
@@ -29,6 +39,37 @@ text.business-entity-diagram-title {
 
 .canvas {
     background: #292929;
+}
+
+.axis {
+    font: 10px sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+
+.slider .handle {
+    fill: #fff;
+    stroke: #000;
+    stroke-opacity: .5;
+    stroke-width: 1.25px;
+    cursor: crosshair;
+}
+
+.axis .domain {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
+    stroke-width: 10px;
+    stroke-linecap: round;
+}
+
+.axis .halo {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 8px;
+    stroke-linecap: round;
 }
 
 /*** Debugging Styles ***/
