@@ -146,10 +146,12 @@ var Force = (function() {
         nodeRadius = 6,
         title = "Business Entity Data Model: FedEx OpenShipping Service",
         legendInfo = [
-            {name: "associationPair", lineStyle: "5, 5, 1, 5", y: 55 },
-            {name: "exclusiveContainmentPair", lineStyle: "5, 1", y: 80},
-            {name: "weakInclusiveContainmentPair", lineStyle: "0.9", y: 105},
-            {name: "strongInclusiveContainmentPair", lineStyle: "15, 10, 5, 10", y: 130}
+            {name: "associationPair", lineStyle: "5, 5, 1, 5", y: 65 },
+            {name: "exclusiveContainmentPair", lineStyle: "5, 1", y: 90},
+            {name: "weakInclusiveContainmentPair", lineStyle: "0.9", y: 115},
+            {name: "strongInclusiveContainmentPair", lineStyle: "15, 10, 5, 10", y: 140},
+            {name: "optionalExclusiveContainmentPair", lineStyle: null, y: 165}
+
         ],
         force;
 
@@ -177,7 +179,7 @@ var Force = (function() {
                 }
             });
 
-
+            _createLinks(data.optionalExclusiveContainmentPair, nodes, 'optionalExclusiveContainmentPair', links);
             _createLinks(data.associationPair, nodes, 'associationPair', links);
             _createLinks(data.exclusiveContainmentPair, nodes, 'exclusiveContainmentPair', links);
             _createLinks(data.weakInclusiveContainmentPair, nodes, 'weakInclusiveContainmentPair', links);
@@ -336,6 +338,7 @@ var Force = (function() {
                 else if (d.linkType === 'strongInclusiveContainmentPair') {
                     return "15, 10, 5, 10";
                 }
+
             })
             .attr("marker-end", "url(#arrow-head)");
             // .style("stroke", function(d) {
@@ -402,7 +405,7 @@ var Force = (function() {
             .orient("bottom")
             // .tickFormat(function(d) { return d + "%"; })
             .tickSize(0)
-            .tickPadding(10))
+            .tickPadding(8))
         .select(".domain")
         .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
         .attr("class", "halo");

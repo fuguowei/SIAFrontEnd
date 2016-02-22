@@ -1,13 +1,15 @@
 .link {
     fill: none;
     /*stroke: #666;*/
-    stroke: #FFF;
+    stroke: #D5D8DC  ;
     stroke-width: 1px;
 }
 
+
+
 line.legend-line {
     fill: none;
-    stroke: #FFF;
+    stroke: #D5D8DC  ;
     stroke-width: 2.5px;
 }
 
@@ -23,7 +25,8 @@ circle {
 
 text {
     fill: #85929E;
-    font: 7px sans-serif;
+    /*fill: #EBEDEF;*/
+    font: 10px sans-serif;
     pointer-events: none;
 }
 
