@@ -1,140 +1,3 @@
-// var ForceDiagram = (function() {
-//
-//     var nodes = [];
-//     var edges = [];
-//     var height = 960;
-//     var width = 960;
-//
-//     // async
-//     function init()  {
-//         $.getJSON(filePath, function(data) {
-//
-//             _.each(data.associationPair, function(i) {
-//
-//                 var node1 = i.strMainEntity;
-//                 var node2 = i.strSlaveEntity;
-//                 _addNode(node1, nodes);
-//                 _addNode(node2, nodes);
-//             });
-//             _addLinks(nodes, data.associationPair, edges);
-//             _render(nodes,edges);
-//         });
-//     }
-//
-//     function _render(nodeData, linkData) {
-//         var charge = -120;
-//         var linkDist = 60;
-//         var nodeRadius = 8;
-//
-//         var color = d3.scale.category20();
-//
-//         var force = d3.layout.force()
-//             .charge(charge)
-//             .linkDistance(linkDist)
-//             .size([width, height]);
-//
-//         var canvas = d3.select('.canvas')
-//             .attr('width', width)
-//             .attr('height', height);
-//
-//         force
-//             .nodes(nodeData)
-//             .links(linkData)
-//             .start();
-//
-//         var links = canvas.selectAll('.links')
-//             .data(linkData)
-//             .enter()
-//             .append("line")
-//             .attr("class", "link");
-//
-//         var nodes = canvas.selectAll('.node')
-//             .data(nodeData)
-//             .enter()
-//             .append('g')
-//             .call(force.drag);
-//
-//         nodes
-//             .append('circle')
-//             .attr('class', 'node')
-//             .attr('r', nodeRadius);
-//
-//         nodes
-//             .append("text")
-//             .attr("x", 12)
-//             .attr("dy", ".35em")
-//             .text(function(d) { return d.name; });
-//
-//         force.on("tick", function() {
-//             links.attr("x1", function(d) { return d.source.x; })
-//                 .attr("y1", function(d) { return d.source.y; })
-//                 .attr("x2", function(d) { return d.target.x; })
-//                 .attr("y2", function(d) { return d.target.y; });
-//
-//         nodes
-//             .attr("transform", function(d) { return "translate(" + d.x + "," +  d.y + ")"; });
-//         });
-//     }
-//
-//     /**
-//      * Adds an object element of the form {name: @name} to the specified array
-//      * Ensures no duplicate elements are added
-//      *
-//      * @param {string} name name of elment to be added to nodeList
-//      * @param {array} nodeList
-//      */
-//     function _addNode(name, nodeList) {
-//         var found=false;
-//         if(nodeList.length === 0) {
-//             nodeList.push({name: name});
-//         } else {
-//             for(var i=0; i<nodeList.length; i++) {
-//                 if(nodeList[i].name == name) {
-//                     found=true;
-//                     break;
-//                 }
-//             }
-//             if(!found) {
-//                 nodeList.push({name: name});
-//             }
-//         }
-//     }
-//
-//     function _addLinks(nodes, map, linkList) {
-//       _.each(map, function(j) {
-//         var parent = {name: j.strMainEntity};
-//         var child = {name: j.strSlaveEntity};
-//         var nodeIndexes = [];
-//
-//         for(var i = 0; i < nodes.length; i++) {
-//           if(_.isEqual(nodes[i], parent)) {
-//             nodeIndexes.push(i);
-//           } else if(_.isEqual(nodes[i], child)) {
-//             nodeIndexes.unshift(i);
-//           }
-//         }
-//         if(nodeIndexes.length === 0) {
-//           throw new Error ('oops');
-//         }
-//         linkList.push({source: nodeIndexes[1], target: nodeIndexes[0]});
-//         });
-//     }
-//
-//     function getNodes() {
-//         return nodes;
-//     }
-//
-//     function getEdges() {
-//         return edges;
-//     }
-//
-//     return {
-//         init: init,
-//         nodes: getNodes,
-//         edges: getEdges
-//     };
-// })();
-
 var Force = (function() {
     var width = 1200,
         height =  1000,
@@ -185,24 +48,6 @@ var Force = (function() {
             _createLinks(data.weakInclusiveContainmentPair, nodes, 'weakInclusiveContainmentPair', links);
             _createLinks(data.strongInclusiveContainmentPair, nodes, 'strongInclusiveContainmentPair', links);
             _render(nodes, links);
-            /**
-             * TEST OUTPUT
-             */
-            //console.log(entityNames);
-            // console.log(links);
-            // console.log(nodes);
-            // setTimeout(function() {
-            //     // console.log(force.linkDistance());
-            //     force.linkDistance(force.linkDistance() * 2.5);
-            //     force.charge(force.charge() * 2.5);
-            //
-            //     force.start();
-            //     console.log('grow');
-            // }, 6000);
-
-
-
-
 
         });
     }
@@ -262,9 +107,25 @@ var Force = (function() {
             .linkDistance(linkDist)
             .size([width, height]);
 
-        var canvas = d3.select('.canvas')
+        var svg = d3.select('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+
+        var outer = d3.select('.outer')
+        //   .call(d3.behavior.zoom().on("zoom", rescale))
+          .on("dblclick.zoom", null);
+
+        var canvas = outer
+        .append('svg:g')
+          .on("mousedown", mousedown);
+
+        canvas
+            .append('rect')
             .attr('width', width)
-            .attr('height', height);
+            .attr('height', height)
+            // .attr("fill", "none");
+            .attr('fill', '#212F3D');
 
         canvas
             .append("text")
@@ -291,8 +152,6 @@ var Force = (function() {
             // .attr("fill", "#FFF");
         var legend = canvas.append("g")
             .attr("class", "legend");
-
-
 
         var legendLines = legend.selectAll("line.legend-line")
             .data(legendInfo)
@@ -355,19 +214,26 @@ var Force = (function() {
             //         return "#666";
             //     }
             // });
+            // var drag = d3.behavior.drag()
+            //     .origin(function(d) { return d; })
+            //     .on("dragstart", dragstarted)
+            //     .on("drag", dragged)
+            //     .on("dragend", dragended);
 
         var nodes = canvas.selectAll('.node')
             .data(nodeData)
             .enter()
-            .append('g')
-            .call(force.drag)
-            .on('click', function(d) { console.log(d); });
+            .append('g');
+            // .call(force.drag)
+            // .call(drag)
+
 
         nodes
             .append('circle')
             .attr('class', 'node')
             .attr('r', nodeRadius)
-            .attr('opacity', 0.8);
+            .attr('opacity', 0.8)
+            .on('dblclick', function(d) { buildTree(d.name); });
 
         nodes
             .append("text")
@@ -381,15 +247,13 @@ var Force = (function() {
                 .attr("x1", function(d) { return d.target.x; })
                 .attr("y1", function(d) { return d.target.y; });
 
-
-
         nodes
             .attr("transform", function(d) { return "translate(" + d.x + "," +  d.y + ")"; });
         });
 
         // brush
         var x = d3.scale.linear()
-            .domain([0, 2.5]) // inputs
+            .domain([0, 3]) // inputs
             .range([0, 200]) // outputs
             .clamp(true); // restrained to inputs
 
@@ -425,7 +289,6 @@ var Force = (function() {
             .attr("transform", "translate(0," + 10 + ")")
             .attr("r", 9);
 
-
         slider
             .selectAll(".extent,.resize")
             .remove();
@@ -447,7 +310,67 @@ var Force = (function() {
           handle.attr("cx", x(value));
         }
 
+        function rescale() {
+          trans=d3.event.translate;
+          scale=d3.event.scale;
 
+          canvas.attr("transform",
+              "translate(" + trans + ")" + " scale(" + scale + ")");
+        }
+
+        function mousedown() {
+          if (false/*!mousedown_node && !mousedown_link*/) {
+            // allow panning if nothing is selected
+            // canvas.call(d3.behavior.zoom().on("zoom"), rescale);
+
+            return;
+          }
+        }
+
+        function buildTree(rootNode) {
+            var test = {
+                name: rootNode,
+                children: []
+            };
+
+            children = [];
+            parents = [];
+            console.log(rootNode);
+            // console.log(force.links());
+            // console.log(force.nodes());
+
+            // find all connected links
+            _.each(force.links(), function(i) {
+                // get the Parents
+                if(i.source.name === rootNode) {
+                    // children.push({name: i.target.name, attributes: });
+                    // test.children.push(i.target.name);
+                }
+                if(i.target.name === rootNode) {
+                    parents.push(i.source.name);
+                }
+
+
+            });
+
+            console.log(children, parents);
+
+        }
+
+    }
+
+
+    function dragstarted(d) {
+        d3.event.sourceEvent.stopPropagation();
+        d3.select(this).classed("dragging", true);
+    }
+
+    function dragged(d) {
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    }
+
+    function dragended(d) {
+        d3.select(this).classed("dragging", false);
     }
 
     function _test() {

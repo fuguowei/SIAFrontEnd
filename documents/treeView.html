@@ -57,7 +57,7 @@ and open the template in the editor.
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            d3.json("flare.json", function (error, flare) {
+            d3.json("../data/flare.json", function (error, flare) {
                 flare.x0 = 0;
                 flare.y0 = 0;
                 update(root = flare);
@@ -191,8 +191,7 @@ and open the template in the editor.
                 return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
             }
 
-        </script>    
-    </body>    
+        </script>
+    </body>
 
 </html>
-

@@ -26,7 +26,7 @@ circle {
 text {
     fill: #85929E;
     /*fill: #EBEDEF;*/
-    font: 10px sans-serif;
+    font: 8px sans-serif;
     pointer-events: none;
 }
 
@@ -40,8 +40,9 @@ text.business-entity-diagram-title {
     fill: #FFF;
 }
 
-.canvas {
-    background: #292929;
+svg {
+    /*background: #85929E;*/
+    background: #212F3D;
 }
 
 .axis {
@@ -50,7 +51,6 @@ text.business-entity-diagram-title {
     -moz-user-select: none;
     user-select: none;
 }
-
 
 .slider .handle {
     fill: #fff;
