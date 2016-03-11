@@ -1,11 +1,11 @@
 var width = 960,
   height = 960,
   legendInfo = [
-      {name: "Association Pair", lineStyle: "5, 5, 1, 5", y: 65 },
-      {name: "Exclusive Containment Pair", lineStyle: "5, 1", y: 90},
-      {name: "Weak Inclusive Containment Pair", lineStyle: "0.9", y: 115},
-      {name: "Strong Inclusive Containment Pair", lineStyle: "15, 10, 5, 10", y: 140},
-      {name: "Optional Exclusive Containment Pair", lineStyle: null, y: 165}
+      {name: "Association", lineStyle: "5, 5, 1, 5", y: 65 },
+      {name: "Exclusive Containment (Mandatory)", lineStyle: "5, 1", y: 90},
+      {name: "Inclusive Containment (Optional)", lineStyle: "0.9", y: 115},
+      {name: "Inclusive Containment (Mandatory)", lineStyle: "15, 10, 5, 10", y: 140},
+      {name: "Exclusive Containment (Optional)", lineStyle: null, y: 165}
   ],
   filePath = "data/OpenShip1.json",
   title = "Business Entity Data Model: FedEx OpenShipping Service",
