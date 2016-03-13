@@ -7,7 +7,7 @@ var width = 960,
       {name: "Inclusive Containment (Mandatory)", lineStyle: "15, 10, 5, 10", y: 140},
       {name: "Exclusive Containment (Optional)", lineStyle: null, y: 165}
   ],
-  filePath = "data/OpenShip1.json",
+  filePath = "data/data.json",
   title = "Business Entity Data Model: FedEx OpenShipping Service",
   canvas,
   force,
@@ -25,17 +25,21 @@ var zoom = d3.behavior.zoom().scaleExtent([1, 1]).on("zoom", zoom),
   noZoom = d3.behavior.zoom().scaleExtent([1,1]).on("zoom", null);
 
 $.getJSON(filePath, function(data) {
+  console.log("start");
   // populate nodes
   _.each(data.entities,function(item) {
     var obj = {name: item.name, attributes: item.attributes, compulsory: item.compulsory};
     nodes.push(obj);
   });
 
+  console.log(nodes);
+
   createLinks(data.optionalExclusiveContainmentPair, nodes, 'optionalExclusiveContainmentPair', links);
   createLinks(data.associationPair, nodes, 'associationPair', links);
   createLinks(data.exclusiveContainmentPair, nodes, 'exclusiveContainmentPair', links);
   createLinks(data.weakInclusiveContainmentPair, nodes, 'weakInclusiveContainmentPair', links);
   createLinks(data.strongInclusiveContainmentPair, nodes, 'strongInclusiveContainmentPair', links);
+  console.log(links);
 
   render_canvas();
   render_markers();
@@ -301,7 +305,7 @@ function createLinks(linkData, nodes, linkType, links) {
         var parentIndex = getNodeIndex(nodes, link.strMainEntity),
             childIndex = getNodeIndex(nodes, link.strSlaveEntity);
 
-        links.push({source: childIndex, target: parentIndex, linkType: linkType});
+        links.push({source: parentIndex, target: childIndex, linkType: linkType});
     });
 }
 
