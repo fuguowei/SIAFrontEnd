@@ -159,7 +159,47 @@
                "type":"RequestedPackageLineItem"
             }
          ]
-      },  
+      },
+      {  
+         "name":"Shipper",
+         "type":"Party",
+         "compulsory":true,
+         "key":"Index",
+         "attributes":[  
+            {  
+               "name":"AccountNumber",
+               "type":"string"
+            },
+            {  
+               "name":"Tins",
+               "type":"TaxpayerIdentification"
+            },
+            {  
+               "name":"Contact",
+               "type":"Contact"
+            }
+         ]
+      },
+      {  
+         "name":"Recipient",
+         "type":"Party",
+         "compulsory":true,
+         "key":"Index",
+         "attributes":[  
+            {  
+               "name":"AccountNumber",
+               "type":"string"
+            },
+            {  
+               "name":"Tins",
+               "type":"TaxpayerIdentification"
+            },
+            {  
+               "name":"Contact",
+               "type":"Contact"
+            }
+         ]
+      },
       {  
          "name":"ShipmentLineItem",
          "type":"RequestedPackageLineItem",
@@ -637,7 +677,11 @@
          ]
       }
    ],
-   "nestingPair":[  
+   "nestingPair":[
+      {
+         "strMainEntity":"ShippingOrderRequest",
+         "strSlaveEntity":"OpenshipOrder"
+      },
       {  
          "strMainEntity":"Consolidation",
          "strSlaveEntity":"ShippingLabel"
@@ -689,10 +733,6 @@
       {  
          "strMainEntity":"SpecialService",
          "strSlaveEntity":"PriorityAlert"
-      },
-      {
-         "strMainEntity":"ShippingOrderRequest",
-         "strSlaveEntity":"OpenshipOrder"
       }
    ],
    "exclusiveContainmentPair":[  
@@ -723,10 +763,6 @@
       {  
          "strMainEntity":"OpenshipOrder",
          "strSlaveEntity":"Pickup"
-      },
-      {  
-         "strMainEntity":"OpenshipOrder",
-         "strSlaveEntity":"CustomsClearance"
       },
       {  
          "strMainEntity":"OpenshipOrder",
