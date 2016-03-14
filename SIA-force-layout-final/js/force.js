@@ -1,11 +1,11 @@
 var width = 960,
   height = 960,
   legendInfo = [
-      {name: "Association", lineStyle: "5, 5, 1, 5", y: 65 },
-      {name: "Exclusive Containment (Mandatory)", lineStyle: "5, 1", y: 90},
-      {name: "Inclusive Containment (Optional)", lineStyle: "0.9", y: 115},
+      {name: "Association", lineStyle: "0.9", y: 115},
+      {name: "Exclusive Containment (Mandatory)", lineStyle: null, y: 165},
+      {name: "Inclusive Containment (Optional)", lineStyle: "5, 5, 1, 5", y: 65},
       {name: "Inclusive Containment (Mandatory)", lineStyle: "15, 10, 5, 10", y: 140},
-      {name: "Exclusive Containment (Optional)", lineStyle: null, y: 165}
+      {name: "Exclusive Containment (Optional)", lineStyle: "5, 1", y: 90}
   ],
   filePath = "data/data.json",
   title = "Business Entity Data Model: FedEx OpenShipping Service",
@@ -82,13 +82,13 @@ function render_force() {
     .style("stroke-width", 1)
     .attr("stroke-dasharray", function(d) {
       if(d.linkType === 'associationPair') {
-          return "5, 5, 1, 5";
+          return "0.9";
       }
-      else if (d.linkType === 'exclusiveContainmentPair') {
+      else if (d.linkType === 'optionalExclusiveContainmentPair') {
           return "5, 1";
       }
       else if (d.linkType === 'weakInclusiveContainmentPair') {
-          return "0.9";
+          return "5, 5, 1, 5";
       }
       else if (d.linkType === 'strongInclusiveContainmentPair') {
           return "15, 10, 5, 10";
@@ -442,13 +442,13 @@ function render_uml(data, width, height) {
       // .attr("marker-end", "url(#arrow-head)");
       .attr("stroke-dasharray", function(d) {
         if(d.linkType === 'associationPair') {
-            return "5, 5, 1, 5";
+            return "0.9";
         }
-        else if (d.linkType === 'exclusiveContainmentPair') {
+        else if (d.linkType === 'optionalExclusiveContainmentPair') {
             return "5, 1";
         }
         else if (d.linkType === 'weakInclusiveContainmentPair') {
-            return "0.9";
+            return "5, 5, 1, 5";
         }
         else if (d.linkType === 'strongInclusiveContainmentPair') {
             return "15, 10, 5, 10";
